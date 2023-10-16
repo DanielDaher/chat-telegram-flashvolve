@@ -1,6 +1,7 @@
 const express = require('express');
 const app = express();
 const http = require('http').createServer(app);
+const cors = require('cors');
 require('dotenv').config();
 const PORT = process.env.PORT || 3001;
 
@@ -10,6 +11,7 @@ require('./Integrations/telegramBot')(TelegramBot);
 const usersRoute = require('./Routes/usersRoute');
 const loginRoute = require('./Routes/loginRoute');
 
+app.use(cors());
 app.use(express.json({
   type: ['application/json']
 })); //https://stackoverflow.com/questions/54016068/empty-body-in-fetch-post-request
