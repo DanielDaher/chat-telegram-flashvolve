@@ -15,7 +15,7 @@ const connection = () => {
     ? Promise.resolve(db)
     : MongoClient.connect(MONGO_DB_URL, OPTIONS)
     .then((conn) => {
-    db = conn.db('chatVoll');
+    db = conn.db('chatTelegramFlashvolve');
     return db;
     })
 };
