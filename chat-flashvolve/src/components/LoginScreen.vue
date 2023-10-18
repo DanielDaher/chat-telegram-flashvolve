@@ -1,5 +1,6 @@
 <script>
 import { ref } from 'vue';
+import { fetchData } from '../services/api';
 
 export default {
   setup() {
@@ -8,7 +9,8 @@ export default {
 
     const makeLogin = () => {
       console.log(username.value);
-      console.log(password.value)
+      console.log(password.value);
+      fetchData('login');
     };
 
     return { username, password, makeLogin };
