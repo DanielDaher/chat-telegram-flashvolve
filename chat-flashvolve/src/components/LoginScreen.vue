@@ -15,9 +15,12 @@ export default {
       const endpoint = newAccount.value ? 'users' : 'login';
       const params = { userName: username.value, password: password.value, endpoint }
       const apiData = await loginOrCreateUser(params);
-      console.log('apiData: ', apiData)
-      if (apiData.token) return router.push('/dashboard');
-      console.log('data error: ', apiData.response.data.error)
+
+      if (apiData.token) {
+        localStorage.setItem('tokenChatTelegramFlashVolve', apiData.token);
+        return router.push('/dashboard');
+      } 
+
       errorMessage.value = apiData.response.data.error || 'Usuário ou senha inválidos';
       setTimeout(() => errorMessage.value = '', 2000); // trocar isso por um sweetalert
     };
