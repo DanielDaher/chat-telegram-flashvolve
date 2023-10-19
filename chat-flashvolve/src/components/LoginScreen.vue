@@ -25,11 +25,12 @@ export default {
       setTimeout(() => errorMessage.value = '', 2000); // trocar isso por um sweetalert
     };
 
-    return { username, password, errorMessage, newAccount, submitForm };
+    return { username, password, errorMessage, newAccount, router, submitForm };
   },
 
   mounted() {
-    console.log('mounted');
+    const token = localStorage.getItem('tokenChatTelegramFlashVolve');
+    if (token) return this.router.push('/dashboard');
   }
 };
 </script>
