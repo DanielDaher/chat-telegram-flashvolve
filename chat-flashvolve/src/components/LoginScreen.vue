@@ -1,5 +1,6 @@
 <script>
 import { ref } from 'vue';
+import Swal from 'sweetalert2'
 import { useRouter } from 'vue-router';
 import { loginOrCreateUser } from '../services/api';
 
@@ -22,7 +23,13 @@ export default {
       } 
 
       errorMessage.value = apiData.response.data.error || 'Usuário ou senha inválidos';
-      setTimeout(() => errorMessage.value = '', 2000); // trocar isso por um sweetalert
+      Swal.fire({
+        title: errorMessage.value,
+        timer: 2000,
+        showConfirmButton: true,
+        timerProgressBar: true,
+      });
+      errorMessage.value = '';
     };
 
     return { username, password, errorMessage, newAccount, router, submitForm };

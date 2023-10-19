@@ -8,9 +8,9 @@ const validateFields = ({ userName, password }) => {
 };
 
 async function loginOrCreateUser({ userName, password, endpoint }) {
-  const userError = 'Usuário ou senha incorretos';
+  const userError = 'Usuário inválido ou senha curta';
   try {
-    if (!validateFields({ userName, password })) return { loginResponse: { error: userError } };
+    if (!validateFields({ userName, password })) return { response: { data: { error: userError } } };
 
     const APIResponse = await axios.post(`${axios.defaults.baseURL}/${endpoint}`, {
       userName,
