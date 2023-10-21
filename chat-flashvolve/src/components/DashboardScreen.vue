@@ -1,10 +1,14 @@
 <script>
-import { ref } from 'vue';
+import { ref, onBeforeUnmount } from 'vue';
 import { useRouter } from 'vue-router';
+import io from 'socket.io-client';
 
 export default {
   setup() {
     const inputChatId = ref('');
+    const socket = io(process.env.VUE_APP_API_URL);
+     const messages = ref([]);
+    // const socketRef = ref('');
     const router = useRouter();
 
     const makeLogout = () => {
@@ -12,10 +16,22 @@ export default {
       return router.push('/');
     }
 
-    return { makeLogout, inputChatId, router };
+    socket.on("telegramMessage", (message) => {
+      messages.value.push({ text: message });
+      console.log('socket funcionou: ', message);
+    });
+
+    onBeforeUnmount(() => {
+      console.log('before unmount')
+      socket.disconnect();
+    });
+
+    return { makeLogout, socket, inputChatId, router };
   },
 
   mounted() {
+    // console.log(this.socketRef)
+    // this.socketRef.value = io(process.env.VUE_APP_API_URL)
   }
 };
 </script>
@@ -31,6 +47,12 @@ export default {
           v-model="inputChatId"
           placeholder="Para iniciar uma conversa, insira aqui um chat.id"
         >
+        <br>
+        <a 
+          href="http://t.me/chatTelegramFlashvolveBot"
+          target="_blank">
+          Ou então clique aqui para chamar o telegram bot
+        </a>
       </form>
     </div>
   </div>

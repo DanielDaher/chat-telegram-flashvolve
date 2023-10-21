@@ -5,8 +5,15 @@ const cors = require('cors');
 require('dotenv').config();
 const PORT = process.env.PORT || 3001;
 
+const io = require('socket.io')(http, {
+  cors: {
+    origin: [process.env.FRONTEND_URL, `${process.env.FRONTEND_URL}/dashboard`],
+    methods: ['GET', 'POST'],
+  },
+});
+
 const TelegramBot = require('node-telegram-bot-api');
-require('./Integrations/telegramBot')(TelegramBot);
+require('./Integrations/telegramBot')(TelegramBot, io);
 
 const usersRoute = require('./Routes/usersRoute');
 const loginRoute = require('./Routes/loginRoute');
