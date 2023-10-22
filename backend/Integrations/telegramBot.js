@@ -1,4 +1,5 @@
 require('dotenv').config();
+const messagesController = require("../controllers/messagesController");
 
 module.exports = (TelegramBot, io) => {
   const token = `${process.env.BOT_TELEGRAM_TOKEN}`;
@@ -10,11 +11,20 @@ module.exports = (TelegramBot, io) => {
     bot.sendMessage(chatId, resp);
   });
 
-  bot.on('message', (msg) => {
+  bot.on('message', async (msg) => {
     console.log(msg)
     const chatId = msg.chat.id;
-    io.emit('telegramMessage', msg)
-    
+
+    io.emit('telegramMessage', msg);
     bot.sendMessage(chatId, 'Received your message!!');
+
+    try {
+      const requisition = { 
+        body: { source: 'telegram', chat: msg.chat, date: msg.date, text: msg.text }
+      }
+      await messagesController.create(requisition);
+    } catch (error) {
+      console.error(error);
+    }
   });
 }

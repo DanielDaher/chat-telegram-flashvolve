@@ -17,7 +17,6 @@ require('./Integrations/telegramBot')(TelegramBot, io);
 
 io.on('connection', (socket) => {
   const { id } = socket;
-  console.log(socket)
   socket.on('chatMessage', async (message) => {
     console.log(message)
     return io.emit('chatMessage', message);
