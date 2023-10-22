@@ -15,6 +15,15 @@ const io = require('socket.io')(http, {
 const TelegramBot = require('node-telegram-bot-api');
 require('./Integrations/telegramBot')(TelegramBot, io);
 
+io.on('connection', (socket) => {
+  const { id } = socket;
+  console.log(socket)
+  socket.on('chatMessage', async (message) => {
+    console.log(message)
+    return io.emit('chatMessage', message);
+  }) 
+});
+
 const usersRoute = require('./Routes/usersRoute');
 const loginRoute = require('./Routes/loginRoute');
 
