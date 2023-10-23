@@ -1,14 +1,17 @@
 <script>
+import Webchat from './WebChat.vue';
 import { ref, onBeforeUnmount } from 'vue';
 import { useRouter } from 'vue-router';
 import io from 'socket.io-client';
 
 export default {
+  components: {
+    Webchat
+  },
   setup() {
     const inputChatId = ref('');
     const socket = io(process.env.VUE_APP_API_URL);
-     const messages = ref([]);
-    // const socketRef = ref('');
+    const messages = ref([]);
     const router = useRouter();
 
     const makeLogout = () => {
@@ -30,8 +33,6 @@ export default {
   },
 
   mounted() {
-    // console.log(this.socketRef)
-    // this.socketRef.value = io(process.env.VUE_APP_API_URL)
   }
 };
 </script>
@@ -55,5 +56,6 @@ export default {
         </a>
       </form>
     </div>
+    <webchat />
   </div>
 </template>
