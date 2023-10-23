@@ -21,7 +21,18 @@ const getLastThirtyMessages = async () => {
   }
 };
 
+const getContacts = async () => {
+  try {
+    const telegramChats = await messagesModel.getContacts();
+    return telegramChats;
+  } catch (error) {
+    console.error(error);
+    return res.status(400).json({ error });
+  }
+};
+
 module.exports = {
   create,
   getLastThirtyMessages,
+  getContacts
 };

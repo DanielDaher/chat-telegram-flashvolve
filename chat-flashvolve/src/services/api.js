@@ -24,4 +24,21 @@ async function loginOrCreateUser({ userName, password, endpoint }) {
   }
 }
 
-export { loginOrCreateUser };
+async function getContacts() {
+  const authToken = localStorage.getItem('tokenChatTelegramFlashVolve');
+  const axiosConfig = {
+    headers: {
+      'Authorization': `${authToken}`
+    }
+  };
+  const apiUrl = `${axios.defaults.baseURL}/messages/telegramContacts`;
+
+  try {
+    const APIResponse = await axios.get(apiUrl, axiosConfig);
+    console.log('get contacts: ', APIResponse);
+  } catch (error) {
+    console.error('Erro na requisição: ', error);
+  }
+}
+
+export { loginOrCreateUser, getContacts };

@@ -31,7 +31,18 @@ const getLastThirtyMessages = async (req, res) => {
   }
 };
 
+const getContacts = async (req, res) => {
+  try {
+    const telegramContacts = await messagesService.getContacts();
+    return res.status(200).json({ telegramContacts });
+  } catch (error) {
+    console.error(error);
+    return res.status(400).json({ error });
+  }
+};
+
 module.exports = {
   create,
   getLastThirtyMessages,
+  getContacts
 };

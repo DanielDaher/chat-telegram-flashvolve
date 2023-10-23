@@ -2,6 +2,7 @@
 import Webchat from './WebChat.vue';
 import { ref, onBeforeUnmount } from 'vue';
 import { useRouter } from 'vue-router';
+import { getContacts } from '../services/api';
 import io from 'socket.io-client';
 
 export default {
@@ -11,7 +12,7 @@ export default {
   setup() {
     const inputChatId = ref('');
     const socket = io(process.env.VUE_APP_API_URL);
-    const messages = ref([]);
+    const contacts = ref([]);
     const router = useRouter();
 
     const makeLogout = () => {
@@ -19,20 +20,26 @@ export default {
       return router.push('/');
     }
 
-    socket.on("telegramMessage", (message) => {
-      messages.value.push({ text: message });
-      console.log('socket funcionou: ', message);
-    });
+    const loadContacts = async () => {
+      const telegramContacts = await getContacts();
+      contacts.value = telegramContacts;
+    }
+
+    // socket.on("telegramMessage", (message) => {
+    //   messages.value.push({ text: message });
+    //   console.log('socket funcionou: ', message);
+    // }); // isso aqui precisa ser um evento que recebe novos chats.
 
     onBeforeUnmount(() => {
       console.log('before unmount')
       socket.disconnect();
     });
 
-    return { makeLogout, socket, inputChatId, router };
+    return { makeLogout, loadContacts, inputChatId, router };
   },
 
   mounted() {
+    this.loadContacts();
   }
 };
 </script>

@@ -25,7 +25,15 @@ const getLastThirtyMessages = async () => {
   return lastMessages.reverse();
 };
 
+const getContacts = async (req, res) => {
+  const db = await connection();
+  const contacts = await db.collection('messages').aggregate([ { $match: { "source": "telegram" } }, { $group: { _id: "$chat.id", document: { $first: "$$ROOT" } } } ]).toArray();
+  return contacts;
+};
+
+
 module.exports = {
   create,
   getLastThirtyMessages,
+  getContacts
 };

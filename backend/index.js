@@ -25,6 +25,7 @@ io.on('connection', (socket) => {
 
 const usersRoute = require('./Routes/usersRoute');
 const loginRoute = require('./Routes/loginRoute');
+const messagesRoute = require('./Routes/messagesRoute');
 
 app.use(cors());
 app.use(express.json({
@@ -34,6 +35,8 @@ app.use(express.json({
 app.use('/users', usersRoute);
 
 app.use('/login', loginRoute);
+
+app.use('/messages', messagesRoute);
 
 app.get('/', (req, res) => res.send('Hello World!'));
 http.listen(PORT, () => console.log(`Ouvindo a porta ${PORT}`));
