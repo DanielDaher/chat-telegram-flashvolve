@@ -35,9 +35,10 @@ async function getContacts() {
 
   try {
     const APIResponse = await axios.get(apiUrl, axiosConfig);
-    console.log('get contacts: ', APIResponse);
+    return APIResponse.data;
   } catch (error) {
     console.error('Erro na requisição: ', error);
+    return { telegramContacts: [] }
   }
 }
 
