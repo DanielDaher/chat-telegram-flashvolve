@@ -13,10 +13,21 @@ export default {
 
     const sendMessage = () => {
       if (newMessage.value) {
-        socket.emit("chatMessage", newMessage.value);
+        const token = localStorage.getItem('tokenChatTelegramFlashVolve');
+        const socketData = { 
+          message: newMessage.value,
+          token,
+          chatId: '6429168521' // trocar isso depois para forma dinâmica
+        }
+        socket.emit("chatMessage", socketData);
         newMessage.value = "";
       }
     };
+
+    socket.on("telegramMessage", (message) => {
+      messages.value.push({ message });
+      console.log('socket funcionou: ', message);
+    });
 
     socket.on("chatMessage", (message) => {
       messages.value.push(message);
