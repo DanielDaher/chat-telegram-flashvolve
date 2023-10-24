@@ -27,7 +27,7 @@ const getLastThirtyMessages = async () => {
 
 const getContacts = async (req, res) => {
   const db = await connection();
-  const contacts = await db.collection('messages').aggregate([ { $match: { "source": "telegram" } }, { $group: { _id: "$chat.id", document: { $first: "$$ROOT" } } } ]).toArray();
+  const contacts = await db.collection('messages').aggregate([ { $match: { "source": "telegram" } }, { $group: { _id: "$chat.id", info: { $first: "$$ROOT" } } } ]).toArray();
   return contacts;
 };
 
