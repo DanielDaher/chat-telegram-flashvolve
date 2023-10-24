@@ -21,8 +21,9 @@ export default {
     }
 
     const loadContacts = async () => {
-      const telegramContacts = await getContacts();
+      const { telegramContacts } = await getContacts();
       contacts.value = telegramContacts;
+      console.log(contacts.value[0])
     }
 
     // socket.on("telegramMessage", (message) => {
@@ -35,7 +36,7 @@ export default {
       socket.disconnect();
     });
 
-    return { makeLogout, loadContacts, inputChatId, router };
+    return { makeLogout, loadContacts, contacts, inputChatId, router };
   },
 
   mounted() {
@@ -47,6 +48,17 @@ export default {
 <template>
   <div>
     <h2>Dashboard</h2>
+    <div v-if="contacts.length">
+      <div v-for="contact in contacts" :key="contact._id">
+        <div>
+          <header class="card-header">
+            <p class="card-header-title" style="width: 180px">
+              {{ contact.info.chat.first_name }} {{ contact.info.chat.last_name }}
+            </p>
+          </header>
+        </div>
+      </div>
+    </div>
     <div class="dashboard-chats">
       <button @click="makeLogout">Sair</button>
       <form>
