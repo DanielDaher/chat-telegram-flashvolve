@@ -12,16 +12,12 @@ const io = require('socket.io')(http, {
   },
 });
 
+const token = `${process.env.BOT_TELEGRAM_TOKEN}`;
 const TelegramBot = require('node-telegram-bot-api');
-require('./Integrations/telegramBot')(TelegramBot, io);
+const bot = new TelegramBot(token, {polling: true});
+require('./Integrations/telegramBot')(bot, io);
 
-io.on('connection', (socket) => {
-  const { id } = socket;
-  socket.on('chatMessage', async (message) => {
-    console.log(message)
-    return io.emit('chatMessage', message);
-  }) 
-});
+require('./sockets/webchat')(io, bot);
 
 const usersRoute = require('./Routes/usersRoute');
 const loginRoute = require('./Routes/loginRoute');
