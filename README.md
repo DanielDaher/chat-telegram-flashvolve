@@ -66,7 +66,7 @@ O site exibe, incialmente, uma tela de login. Caso ainda não tenha uma conta, m
 
 Em seguida, é só digitar usuário e senha e entrar (caso esteja usando a versão deste app que está online, isto pode demorar alguns minutos, pois o servidor costuma demorar para se iniciar).
 
-Atente-se que o nome de usuário precisa ter mais que 2 caracterres, enquanto a senha precisa ter mais que 4.
+Atente-se que o nome de usuário precisa ter mais que 1 caracter, enquanto a senha precisa ter mais que 3.
 
 Uma vez logado, é possível selecionar conversas e interagir em tempo real com usuários e grupos do telegram.
 
