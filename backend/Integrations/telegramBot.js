@@ -3,7 +3,7 @@ const messagesController = require("../controllers/messagesController");
 
 module.exports = (bot, io) => {
   bot.on('message', async (msg) => {
-    io.emit('telegramMessage', msg);
+    io.emit('telegramMessage', { ...msg, source: 'telegram' });
     try {
       const requisition = { 
         body: { source: 'telegram', chat: msg.chat, date: msg.date, text: msg.text }
