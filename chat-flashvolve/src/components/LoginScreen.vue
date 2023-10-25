@@ -17,6 +17,8 @@ export default {
       const params = { userName: username.value, password: password.value, endpoint }
       const apiData = await loginOrCreateUser(params);
 
+      Swal.fire('Isso pode demorar alguns minutos se o servidor estiver inativo')
+
       if (apiData.token) {
         localStorage.setItem('tokenChatTelegramFlashVolve', apiData.token);
         return router.push('/dashboard');
