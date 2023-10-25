@@ -26,24 +26,24 @@ export default {
     }
 
     const setCurrentChatId = (contact) => {
-      currentChatId.value = contact.info.chat.id;
+      currentChatId.value = contact.info?.chat.id || contact.id;
       const currentIndex = contacts.value.indexOf(contact);
       contacts.value[currentIndex] = { ...contact, newMessage: false };
     } 
 
-    const showFullName = (info) => {
-      if (info.chat.type === 'private') {
-        const firstName = info.chat.first_name;
-        const lastName = info.chat.last_name;
+    const showFullName = (contact) => {
+      if ( contact.info?.chat.type === 'private' || contact.type === 'private') {
+        const firstName = contact.info?.chat.first_name || contact.first_name;
+        const lastName = contact.info?.chat.last_name || contact.last_name;
         return `${firstName} ${lastName ? `${lastName}` : ''}`;
       }
 
-      return `Grupo: ${ info.chat.title }`;
+      return `Grupo: ${ contact.title || contact.info?.chat.title }`;
     }
 
     socket.on("telegramMessage", ({ chat }) => {
       const oldContact = contacts.value.find((contact) => contact._id === chat.id);
-      const newContact = { info: chat };
+      const newContact = chat;
 
       if (oldContact) {
         const currentIndex = contacts.value.indexOf(oldContact);
@@ -99,7 +99,7 @@ export default {
           >
             <header class="card-header contact-chat">
               <p class="card-header-title" style="width: 180px">
-                {{ showFullName(contact.info) }}
+                {{ showFullName(contact) }}
               </p>
               <span v-if="contact.newMessage" class="tag is-primary">!!!</span>
             </header>

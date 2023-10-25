@@ -3,10 +3,11 @@ const messagesController = require("../controllers/messagesController");
 
 module.exports = (bot, io) => {
   bot.on('message', async (msg) => {
-    io.emit('telegramMessage', { ...msg, source: 'telegram' });
+    const messageData = { source: 'telegram', chat: msg.chat, date: msg.date, text: msg.text }
+    io.emit('telegramMessage', messageData);
     try {
       const requisition = { 
-        body: { source: 'telegram', chat: msg.chat, date: msg.date, text: msg.text }
+        body: messageData
       }
       await messagesController.create(requisition);
     } catch (error) {
