@@ -86,7 +86,7 @@ export default {
       type="text"
       placeholder="Digite sua mensagem e aperte enter..." 
     />
-    <button @click="sendMessage" class="button is-info">Enviar</button>
+    <button v-if="chatId" @click="sendMessage" class="button is-info">Enviar</button>
   </main>
 </template>
 
