@@ -8,13 +8,13 @@ const createMessage = async ({ message, token, socket, io, bot, chatId }) => {
   
     const { _id, userName } = userIsValid;
   
-    const requisition = { user: { _id, userName }, body: { text: message, source: 'webchat' } };
+    const requisition = { user: { _id, userName }, body: { text: message, source: 'webchat', chat: { id: chatId, first_name: userName } } };
     const insertMessageOnDatabase = await messagesController.create(requisition);
 
     bot.sendMessage(chatId, message);
   
     if (insertMessageOnDatabase.responseMessage === 'message inserted on database') {
-      const socketMessageResponse = { text: message, chat: { first_name: userName } };
+      const socketMessageResponse = { text: message, source: 'webchat', chat: { first_name: userName, id: chatId } };
       return io.emit('chatMessage', socketMessageResponse);
     }
   } catch (error) {

@@ -11,8 +11,8 @@ const create = async (req, res) => {
       return { statusCode, responseMessage };
     }
 
-    const { _id: userID, userName } = req.user;
-    const { statusCode, responseMessage } = await messagesService.create({ userID, userName, text });
+    const { _id: userID, userName: first_name } = req.user;
+    const { statusCode, responseMessage } = await messagesService.create({ userID, first_name, text, chat, source });
   
     return { statusCode, responseMessage };
   } catch (error) {
@@ -22,8 +22,9 @@ const create = async (req, res) => {
 };
 
 const getLastThirtyMessages = async (req, res) => {
+  const chatId = req.query.chatId;
   try {
-    const messages = await messagesService.getLastThirtyMessages();
+    const messages = await messagesService.getLastThirtyMessages(chatId);
     return res.status(200).json({ messages });
   } catch (error) {
     console.error(error);

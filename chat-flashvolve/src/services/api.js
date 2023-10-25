@@ -1,6 +1,7 @@
 import axios from 'axios';
 
 axios.defaults.baseURL = process.env.VUE_APP_API_URL || 'http://localhost:3001';
+const authToken = localStorage.getItem('tokenChatTelegramFlashVolve');
 
 const validateFields = ({ userName, password }) => {
   if (userName.length < 2 || password.length < 4) return false;
@@ -25,7 +26,6 @@ async function loginOrCreateUser({ userName, password, endpoint }) {
 }
 
 async function getContacts() {
-  const authToken = localStorage.getItem('tokenChatTelegramFlashVolve');
   const axiosConfig = {
     headers: {
       'Authorization': `${authToken}`
@@ -42,4 +42,22 @@ async function getContacts() {
   }
 }
 
-export { loginOrCreateUser, getContacts };
+async function getLastThirtyMessages(chatId) {
+  const axiosConfig = {
+    params: { chatId },
+    headers: {
+      'Authorization': `${authToken}`
+    }
+  };
+  const apiUrl = `${axios.defaults.baseURL}/messages`;
+
+  try {
+    const APIResponse = await axios.get(apiUrl, axiosConfig);
+    return APIResponse.data;
+  } catch (error) {
+    console.error('Erro na requisição: ', error);
+    return null;
+  }
+}
+
+export { loginOrCreateUser, getContacts, getLastThirtyMessages };

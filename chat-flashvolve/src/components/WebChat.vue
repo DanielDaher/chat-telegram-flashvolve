@@ -1,15 +1,23 @@
 <script>
-import { ref, onMounted, onBeforeUnmount } from "vue";
+import { ref, watch, onMounted, onBeforeUnmount } from "vue";
+import { getLastThirtyMessages } from '../services/api';
 import io from "socket.io-client";
 
 export default {
   props: {
-    // socket: Object
+    chatId: Number,
   },
-  setup() {
+  setup(props) {
     const socket = io(process.env.VUE_APP_API_URL);
     const messages = ref([]);
     const newMessage = ref("");
+
+    const loadMessages = async () => {
+      if (props.chatId) {
+        const oldMessages = await getLastThirtyMessages(props.chatId);  
+        messages.value = oldMessages.messages;
+      }
+    };
 
     const sendMessage = () => {
       if (newMessage.value) {
@@ -17,7 +25,7 @@ export default {
         const socketData = { 
           message: newMessage.value,
           token,
-          chatId: '6429168521' // trocar isso depois para forma dinâmica
+          chatId: props.chatId
         }
         socket.emit("chatMessage", socketData);
         newMessage.value = "";
@@ -25,20 +33,25 @@ export default {
     };
 
     socket.on("telegramMessage", (message) => {
+      if (message.chat.id !== props.chatId) return;
       messages.value.push({ message });
       console.log('socket funcionou: ', message);
     });
 
     socket.on("chatMessage", (message) => {
+      if (message.chat.id !== props.chatId) return;
       messages.value.push(message);
     });
 
+    watch(() => props.chatId, (newValue) => {
+      loadMessages(newValue);
+    });
+
     onMounted(() => {
-      // buscar mensagens
+      loadMessages(props.chatId);
     });
 
     onBeforeUnmount(() => {
-      console.log('before unmount')
       socket.disconnect();
     });
 
@@ -46,6 +59,7 @@ export default {
       messages,
       newMessage,
       sendMessage,
+      loadMessages,
     };
   },
 };
@@ -53,7 +67,8 @@ export default {
 
 <template>
   <div>
-    <div class="chat">
+    <p v-if="!chatId">Selecione uma conversa</p>
+    <div class="chat" v-else>
       <div class="chat-messages">
         <div v-for="(message, index) in messages" :key="index" class="message">
           <strong><!-- {{ message.sender }}: --></strong> {{ message }}

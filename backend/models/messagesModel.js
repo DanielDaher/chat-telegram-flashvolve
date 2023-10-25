@@ -14,14 +14,13 @@ const create = async (requisition) => {
   }
 };
 
-const getLastThirtyMessages = async () => {
-  const query = {};
+const getLastThirtyMessages = async (chatId) => {
+  const query = { "chat.id": chatId }
   const orderby = {
     $natural: -1
   };
   const db = await connection();
-  const lastMessages = await db.collection('messages').find().sort(orderby).limit(30).toArray();
-  // https://stackoverflow.com/questions/4421207/how-to-get-the-last-n-records-in-mongodb
+  const lastMessages = await db.collection('messages').find(query).sort(orderby).limit(30).toArray();
   return lastMessages.reverse();
 };
 

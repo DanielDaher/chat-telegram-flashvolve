@@ -11,9 +11,10 @@ const create = async (requisition) => {
   }
 };
 
-const getLastThirtyMessages = async () => {
+const getLastThirtyMessages = async (chatId) => {
+  const chatIdNumber = Number(chatId);
   try {
-    const messages = await messagesModel.getLastThirtyMessages();
+    const messages = await messagesModel.getLastThirtyMessages(chatIdNumber);
     return messages;
   } catch (error) {
     console.error(error);
