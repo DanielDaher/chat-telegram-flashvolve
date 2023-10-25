@@ -17,6 +17,8 @@ export default {
       const params = { userName: username.value, password: password.value, endpoint }
       const apiData = await loginOrCreateUser(params);
 
+      Swal.fire('Isso pode demorar alguns minutos se o servidor estiver inativo')
+
       if (apiData.token) {
         localStorage.setItem('tokenChatTelegramFlashVolve', apiData.token);
         return router.push('/dashboard');
@@ -43,26 +45,61 @@ export default {
 </script>
 
 <template>
-  <div>
-    <h2>Login</h2>
-    <form @submit.prevent="submitForm">
-      <div>
-        <input type="checkbox" id="check" v-model="newAccount" />
-        <label for="check">Não tenho uma conta ainda</label>
-      </div>
-      <p> Preencha suas informações para {{ newAccount ? 'se cadastrar' : 'logar' }} </p>
-      <div>
-        <label for="username">Username:</label>
-        <input type="text" id="username" v-model="username" />
-      </div>
-      <div>
-        <label for="password">Password:</label>
-        <input type="password" id="password" v-model="password" />
-      </div>
-      <div>
-        <button type="submit">Login</button>
-      </div>
-      <p v-if="errorMessage.length">{{ errorMessage }}</p> <!-- trocar por sweetalert -->
-    </form>
+  <div class="login-page">
+    <div class="box">
+      <h2 class="title">Chat Telegram-Flashvolve</h2>
+      <form @submit.prevent="submitForm">
+        <div>
+          <label class="checkbox">
+            <input type="checkbox" v-model="newAccount">
+            Não tenho uma conta ainda
+          </label>
+        </div>
+        <p class="title is-6">
+          Preencha suas informações para {{ newAccount ? 'se cadastrar' : 'logar' }}
+        </p>
+        <input 
+          class="input is-hovered" 
+          type="text" 
+          placeholder="nome de usuário" 
+          v-model="username" 
+        />
+        <br>
+        <input
+          class="input is-hovered"
+          type="password" 
+          placeholder="senha" 
+          v-model="password" 
+        />
+        <div>
+          <button class="button is-link" type="submit">Login</button>
+        </div>
+        <p v-if="errorMessage.length">{{ errorMessage }}</p>
+      </form>
+    </div>
   </div>
 </template>
+
+<style scoped>
+  .login-page {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    justify-content: center;
+    height: 90vh;
+  }
+  .box {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    height: 50vh;
+    width: 40vw;
+  }
+  .input {
+    margin: 3px;
+    width: 300px;
+  }
+  button {
+    margin: 10px;
+  }
+</style>
