@@ -2,9 +2,7 @@ const messagesService = require('../services/messagesService');
 
 const create = async (req, res) => {
   try {
-    console.log('req', req)
     const { source, text, date, chat } = req.body;
-    console.log()
     if (source === 'telegram') {
       const { statusCode, responseMessage } = await messagesService.create({ source, text, date, chat });
   
