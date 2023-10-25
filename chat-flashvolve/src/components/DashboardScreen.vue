@@ -23,13 +23,12 @@ export default {
     const loadContacts = async () => {
       const { telegramContacts } = await getContacts();
       contacts.value = telegramContacts;
-      console.log(contacts.value[0])
     }
 
     const setCurrentChatId = (contact) => {
       currentChatId.value = contact.info.chat.id;
       const currentIndex = contacts.value.indexOf(contact);
-      contacts.value[currentIndex] = { ...contact, newMessage: false } // ir no html e trocar o 'nova mensagem' por algum ícone
+      contacts.value[currentIndex] = { ...contact, newMessage: false };
     } 
 
     const showFullName = (info) => {
@@ -42,7 +41,7 @@ export default {
       return `Grupo: ${ info.chat.title }`;
     }
 
-    socket.on("telegramMessage", ({ chat, text }) => { //remover esse text e o console.log
+    socket.on("telegramMessage", ({ chat }) => {
       const oldContact = contacts.value.find((contact) => contact._id === chat.id);
       const newContact = { info: chat };
 
@@ -53,12 +52,10 @@ export default {
       
       if (!oldContact) {
         contacts.value.push(newContact);
-        console.log('socket funcionou: ', { chat, text, newMessage: true });
       }
     });
 
     onBeforeUnmount(() => {
-      console.log('before unmount')
       socket.disconnect();
     });
 
@@ -73,33 +70,80 @@ export default {
 </script>
 
 <template>
-  <div>
-    <h2>Dashboard</h2>
-      <a 
-        href="http://t.me/chatTelegramFlashvolveBot"
-        target="_blank">
-        Clique aqui para chamar o telegram bot e receba novas mensagens!
-      </a>
-    <div v-if="contacts.length">
-      <div v-for="contact in contacts" :key="contact._id">
-        <div class="pointer" @click="setCurrentChatId(contact)">
-          <header class="card-header">
-            <p class="card-header-title" style="width: 180px">
-              {{ showFullName(contact.info) }}
-              {{ `${ contact.newMessage ? 'Nova Mensagem' : ''}` }}
-            </p>
-          </header>
+  <div class="dashboard-div">
+    <header class="dashboard-header" >
+      <button 
+        class="button is-dark is-responsive is-hovered logout-button"
+        @click="makeLogout"
+      >
+        Sair
+      </button>
+      <button
+        title="Clique aqui para chamar o telegram bot e receber novas mensagens" 
+        class="button is-link is-responsive is-hovered telegram-button"
+      >
+        <a
+          href="http://t.me/chatTelegramFlashvolveBot"
+          target="_blank"
+        >
+          Telegram Bot
+        </a>
+      </button>
+      <div class="dashboard-chats box" v-if="contacts.length">
+        <p class="title is-6">Conversas</p>
+        <div v-for="contact in contacts" :key="contact._id">
+          <div
+            class="pointer"
+            :title="contact.newMessage ? 'Nova mensagem' : 'Clique para iniciar conversa'"
+            @click="setCurrentChatId(contact)"
+          >
+            <header class="card-header contact-chat">
+              <p class="card-header-title" style="width: 180px">
+                {{ showFullName(contact.info) }}
+              </p>
+              <span v-if="contact.newMessage" class="tag is-primary">!!!</span>
+            </header>
+          </div>
         </div>
       </div>
-    </div>
-    <div class="dashboard-chats">
-      <button @click="makeLogout">Sair</button>
-    </div>
+    </header>
     <webchat :chatId="currentChatId" />
   </div>
 </template>
 
 <style scoped>
+  a {
+    text-decoration: none;
+    color: white;
+  }
+  .dashboard-div {
+    display: flex;
+    height: 100vh;
+  }
+
+  .dashboard-header {
+    display: flex;
+    flex-direction: column;
+    margin: 35px;
+    width: 500px;
+  }
+
+  .dashboard-chats {
+    max-height: 70vh;
+    overflow: auto;
+    overflow-x: hidden;
+  }
+
+  .contact-chat {
+    display: flex;
+    justify-content: space-between;
+  }
+
+  .logout-button, .telegram-button {
+    margin: 5px;
+    width: 120px;
+  }
+
   .pointer {
     cursor: pointer
   }
