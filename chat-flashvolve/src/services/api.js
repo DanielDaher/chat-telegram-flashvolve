@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-axios.defaults.baseURL = process.env.VUE_APP_API_URL || 'http://localhost:3001';
+axios.defaults.baseURL = process.env.VUE_APP_API_URL || 'https://chat-telegram-flashvolve-api.onrender.com';
 const authToken = localStorage.getItem('tokenChatTelegramFlashVolve');
 
 const validateFields = ({ userName, password }) => {
